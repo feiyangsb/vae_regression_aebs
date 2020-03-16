@@ -112,7 +112,10 @@ class VAEPerceptionNet(nn.Module):
         return x, z_mu, z_logvar, pz_mu, r_mu, r_logvar
 
     def reparameterize(self, mu, logvar):
-        std = logvar.mul(0.5).exp_()
-        eps = torch.FloatTensor(std.size()).normal_()
-        eps = Variable(eps)
-        return eps.mul(std).add_(mu)
+        std = torch.exp(0.5*logvar)
+        eps = torch.rand_like(std)
+        return mu + eps*std
+        #std = logvar.mul(0.5).exp_()
+        #eps = torch.FloatTensor(std.size()).normal_()
+        #eps = Variable(eps)
+        #return eps.mul(std).add_(mu)

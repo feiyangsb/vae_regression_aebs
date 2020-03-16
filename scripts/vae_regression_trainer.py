@@ -38,6 +38,11 @@ class VAERegression():
     def fit(self):
         self.model = VAEPerceptionNet()
         self.model = self.model.to(self.device)
+        try:
+            self.model.load_state_dict(torch.load("./models/perception.pt", map_location=self.device))
+            print("Load the pretrained model")
+        except:
+            print("can't find pretrained model")
         dataloader = DataLoader(self.dataset, batch_size=64, shuffle=True, num_workers=8)
         optimizer = optim.Adam(self.model.parameters(), lr=0.0001, weight_decay=0.5e-6, amsgrad=False) 
         scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[int(self.epoch*0.7)], gamma=0.1)
